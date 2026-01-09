@@ -84,7 +84,7 @@ const GetReviews = () => {
   return (
     <>
       <ToastContainer position="top-right" autoClose={3000} />
-      <div className="container w-75">
+      <div className="container w-100">
         <h3 className="text-center my-4 fw-bold">Reviews List</h3>
         <table className="table table-bordered text-center">
           <thead className="table-dark">
@@ -108,8 +108,8 @@ const GetReviews = () => {
                 <td>{r.user}</td>
                 <td>{r.category}</td>
                 <td>
-                  <button className="btn btn-warning btn-sm mx-1 text-white fw-bold" onClick={() => openModal(r)}>Update</button>
-                  <button className="btn btn-danger btn-sm fw-bold text-white" onClick={() => deleteReview(r._id)}>Delete</button>
+                  <button className="btn btn-warning btn-sm mx-1 text-white mt-2 fw-bold" onClick={() => openModal(r)}>Update</button>
+                  <button className="btn btn-danger btn-sm fw-bold mt-3 text-white" onClick={() => deleteReview(r._id)}>Delete</button>
                 </td>
               </tr>
             )) : <tr><td colSpan="6">No reviews found</td></tr>}

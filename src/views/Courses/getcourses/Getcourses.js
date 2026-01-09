@@ -113,7 +113,7 @@ const Getcourses = () => {
   return (
     <>
       <ToastContainer position="top-right" autoClose={3000} />
-      <div className="container w-75">
+      <div className="container w-100">
         <h3 className="text-center my-4 fw-bold text-white">Courses List</h3>
 
         <table className="table table-bordered text-center">
@@ -147,7 +147,7 @@ const Getcourses = () => {
                     />
                   </td>
                   <td>{c.title}</td>
-                  <td>{c.discruption}</td>
+                  <td>{c.discruption.slice(0,70)}</td>
                   <td>{c.price}</td>
                   <td>{c.discount}</td>
                   <td>{c.level}</td>
@@ -155,13 +155,13 @@ const Getcourses = () => {
                   <td>{c.category}</td>
                   <td>
                     <button
-                      className="btn btn-warning btn-sm mx-1 text-white fw-bold"
+                      className="btn btn-warning btn-sm mx-1 mt-2 text-white fw-bold"
                       onClick={() => openModal(c)}
                     >
                       Update
                     </button>
                     <button
-                      className="btn btn-danger btn-sm text-white fw-bold"
+                      className="btn btn-danger btn-sm text-white mt-3 fw-bold"
                       onClick={() => deleteCourse(c._id)}
                     >
                       Delete
@@ -255,8 +255,6 @@ const Getcourses = () => {
                 <option value="Intermediate">English</option>
 
               </select>
-
-
 
               <label className="form-label fw-bold">Image</label>
               <input

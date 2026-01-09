@@ -101,7 +101,7 @@ const Getblogs = () => {
 
   return (
     <>
-      <div className="container w-75">
+      <div className="container w-100">
         <h3 className="text-center my-4 fw-bold text-white">Blogs List</h3>
 
         <table className="table table-bordered text-center">
@@ -133,19 +133,19 @@ const Getblogs = () => {
                     />
                   </td>
                   <td>{c.title}</td>
-                  <td>{c.descruption}</td>
+                  <td>{c.descruption.slice(0,70)}</td>
                   <td>{c.createdby}</td>
                   <td>{c.timeread}</td>
                   <td>{c.categary}</td>
                   <td>
                     <button
-                      className="btn btn-warning btn-sm mx-1 fw-bold text-white"
+                      className="btn btn-warning btn-sm mx-1 mt-2 fw-bold text-white"
                       onClick={() => openModal(c)}
                     >
                       Update
                     </button>
                     <button
-                      className="btn btn-danger btn-sm fw-bold text-white"
+                      className="btn btn-danger btn-sm mt-3 fw-bold text-white"
                       onClick={() => deleteCourse(c._id)}
                     >
                       Delete

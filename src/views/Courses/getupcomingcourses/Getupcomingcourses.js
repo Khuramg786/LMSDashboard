@@ -117,7 +117,7 @@ const Getupcomingcourses = () => {
       {/* Toast Container */}
       <ToastContainer position="top-right" autoClose={3000} />
 
-      <div className="container w-75">
+      <div className="container w-100">
         <h3 className="text-center my-4 fw-bold">Upcoming Courses List</h3>
 
         <table className="table table-bordered text-center">
@@ -148,19 +148,19 @@ const Getupcomingcourses = () => {
                     />
                   </td>
                   <td>{c.title}</td>
-                  <td>{c.discruption}</td>
+                  <td>{c.discruption.slice(0,70)}</td>
                   <td>{c.price}</td>
                   <td>{c.discount}</td>
                   <td>{c.studentenroll}</td>
                   <td>
                     <button
-                      className="btn btn-warning btn-sm mx-1 fw-bold text-white"
+                      className="btn btn-warning btn-sm mx-1  mt-2 fw-bold text-white"
                       onClick={() => openModal(c)}
                     >
                       Update
                     </button>
                     <button
-                      className="btn btn-danger mt-2 btn-sm fw-bold text-white"
+                      className="btn btn-danger mt-3 btn-sm fw-bold text-white"
                       onClick={() => deleteCourse(c._id)}
                     >
                       Delete

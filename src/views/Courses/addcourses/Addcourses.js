@@ -21,7 +21,7 @@ const AddCourses = () => {
   // ================= HANDLE SUBMIT =================
   const handleSubmit = async () => {
     // Validation
-    if (!title || !discruption || !price || !level || !lang || !category || !image) {
+    if (!title || !discruption || !price  || !category || !image) {
       toast.error("❌ All required fields must be filled");
       return;
     }
@@ -49,6 +49,7 @@ const AddCourses = () => {
         formData
       );
 
+      console.log("response ", res)
       if (res.status === 201) {
         toast.success("✅ Course added successfully!");
         setTimeout(() => navigate("/Courses/Getcourses"), 1500);
