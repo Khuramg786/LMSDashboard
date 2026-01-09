@@ -195,7 +195,7 @@ const Getcourses = () => {
                 <option value="Business Growth Club">Business Growth Club</option>
                 <option value="Team Management Skills Club">Team Management Skills Club</option>
                 <option value="Sales Booster Training">Sales Booster Training</option>
-                <option value="Mental Wellness">Mental Wellness</option>
+                {/* <option value="Mental Wellness">Mental Wellness</option> */}
                 <option value="Financial Management">Financial Management</option>
                 <option value="Relation Building">Relation Building</option>
                 <option value="Physical Health">Physical Health</option>
