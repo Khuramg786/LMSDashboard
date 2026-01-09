@@ -1,22 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import truncate from "html-truncate";
 
 const Getblogs = () => {
   const [blogs, setBlogs] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [currentId, setCurrentId] = useState(null);
 
-  // form states
+  // form states for update
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const [descruption, setDescruption] = useState("");
   const [createdby, setCreatedby] = useState("");
   const [timeread, setTimeread] = useState("");
   const [category, setCategory] = useState("");
   const [image, setImage] = useState(null);
 
-  // ================= FETCH COURSES =================
-  const fetchCourses = async () => {
+  // ================= FETCH BLOGS =================
+  const fetchBlogs = async () => {
     try {
       const res = await fetch(
         "https://lms-backend-umup.onrender.com/blog/getblogs"
@@ -29,12 +32,11 @@ const Getblogs = () => {
   };
 
   useEffect(() => {
-    fetchCourses();
+    fetchBlogs();
   }, []);
 
-  // ================= DELETE =================
-  const deleteCourse = async (id) => {
-    // if (!window.confirm("Delete this course?")) return;
+  // ================= DELETE BLOG =================
+  const deleteBlog = async (id) => {
 
     try {
       const res = await fetch(
@@ -54,23 +56,23 @@ const Getblogs = () => {
     }
   };
 
-  // ================= OPEN MODAL =================
+  // ================= OPEN UPDATE MODAL =================
   const openModal = (blog) => {
     setCurrentId(blog._id);
     setTitle(blog.title);
-    setDescription(blog.descruption); // backend field is descruption
+    setDescruption(blog.descruption); // HTML string from backend
     setCreatedby(blog.createdby);
     setTimeread(blog.timeread);
-    setCategory(blog.categary); // backend field is categary
+    setCategory(blog.categary);
     setImage(null);
     setShowModal(true);
   };
 
-  // ================= UPDATE =================
-  const updateCourse = async () => {
+  // ================= UPDATE BLOG =================
+  const updateBlog = async () => {
     const formData = new FormData();
     formData.append("title", title);
-    formData.append("descruption", description);
+    formData.append("descruption", descruption);
     formData.append("createdby", createdby);
     formData.append("timeread", timeread);
     formData.append("categary", category);
@@ -124,16 +126,24 @@ const Getblogs = () => {
                 <tr key={c._id}>
                   <td>{i + 1}</td>
                   <td>
-                    <img
-                      src={c.imageUrl}
-                      alt="blog"
-                      width="70"
-                      height="70"
-                      style={{ borderRadius: 10, objectFit: "cover" }}
-                    />
+                    {c.imageUrl && (
+                      <img
+                        src={c.imageUrl}
+                        alt="blog"
+                        width="70"
+                        height="70"
+                        style={{ borderRadius: 10, objectFit: "cover" }}
+                      />
+                    )}
                   </td>
                   <td>{c.title}</td>
-                  <td>{c.descruption.slice(0,70)}</td>
+                  {/* Short preview without HTML tags */}
+       
+<td>
+  <div
+    dangerouslySetInnerHTML={{ __html: truncate(c.descruption, 70) }}
+  />
+</td>
                   <td>{c.createdby}</td>
                   <td>{c.timeread}</td>
                   <td>{c.categary}</td>
@@ -146,7 +156,7 @@ const Getblogs = () => {
                     </button>
                     <button
                       className="btn btn-danger btn-sm mt-3 fw-bold text-white"
-                      onClick={() => deleteCourse(c._id)}
+                      onClick={() => deleteBlog(c._id)}
                     >
                       Delete
                     </button>
@@ -164,7 +174,10 @@ const Getblogs = () => {
 
       {/* ================= UPDATE MODAL ================= */}
       {showModal && (
-        <div className="modal d-block" style={{ background: "rgba(0,0,0,0.6)" }}>
+        <div
+          className="modal d-block"
+          style={{ background: "rgba(0,0,0,0.6)" }}
+        >
           <div className="modal-dialog">
             <div className="modal-content p-3">
               <h5 className="fw-bold mb-3">Update Blog</h5>
@@ -178,14 +191,14 @@ const Getblogs = () => {
               />
 
               <label className="form-label fw-bold">Description</label>
-              <textarea
-                className="form-control mb-2"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Description"
+              <ReactQuill
+                theme="snow"
+                value={descruption}
+                onChange={setDescruption}
+                placeholder="Write your blog here..."
               />
 
-              <label className="form-label fw-bold">Created By</label>
+              <label className="form-label fw-bold mt-2">Created By</label>
               <input
                 className="form-control mb-2"
                 value={createdby}
@@ -232,7 +245,7 @@ const Getblogs = () => {
                 </button>
                 <button
                   className="btn btn-success fw-bold text-white"
-                  onClick={updateCourse}
+                  onClick={updateBlog}
                 >
                   Save
                 </button>

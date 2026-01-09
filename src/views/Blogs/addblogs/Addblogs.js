@@ -1,61 +1,64 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+// Import react-quill
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const Addblogs = () => {
-  const [title, setTitle] = useState('')
-  const [descruption, setDescruption] = useState('')
-  const [createdby, setCreatedby] = useState('')
-  const [timeread, setTimeread] = useState('')
-  const [categary, setCategary] = useState('')
-  const [image, setImage] = useState(null)
+  const [title, setTitle] = useState("");
+  const [descruption, setDescruption] = useState(""); // now rich text
+  const [createdby, setCreatedby] = useState("");
+  const [timeread, setTimeread] = useState("");
+  const [categary, setCategary] = useState("");
+  const [image, setImage] = useState(null);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const registerProduct = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (!title || !createdby || !categary) {
-      toast.error('⚠️ Please fill required fields')
-      return
+      toast.error("⚠️ Please fill required fields");
+      return;
     }
 
     try {
-      const formData = new FormData()
-      formData.append('title', title)
-      formData.append('descruption', descruption)
-      formData.append('createdby', createdby)
-      formData.append('timeread', timeread)
-      formData.append('categary', categary)
-      if (image) formData.append('image', image)
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("descruption", descruption); // HTML string
+      formData.append("createdby", createdby);
+      formData.append("timeread", timeread);
+      formData.append("categary", categary);
+      if (image) formData.append("image", image);
 
       const res = await axios.post(
-        'https://lms-backend-umup.onrender.com/blog/postbloges',
+        "https://lms-backend-umup.onrender.com/blog/postbloges",
         formData
-      )
+      );
 
       if (res.status === 201) {
-        toast.success('✅ Blog added successfully!', {
+        toast.success("✅ Blog added successfully!", {
           position: "top-center",
           autoClose: 2000,
-          theme: "colored"
-        })
+          theme: "colored",
+        });
 
         setTimeout(() => {
-          navigate('/Blogs/Getblogs')
-        }, 2000)
+          navigate("/Blogs/Getblogs");
+        }, 2000);
       }
     } catch (error) {
-      console.error(error)
-      toast.error('❌ Something went wrong')
+      console.error(error);
+      toast.error("❌ Something went wrong");
     }
-  }
+  };
 
   return (
     <>
-      {/* 🔔 TOAST CONTAINER */}
       <ToastContainer />
 
       <h1 className="text-center my-4 fw-bold fs-4">Add Blogs</h1>
@@ -74,11 +77,11 @@ const Addblogs = () => {
 
           <div className="mb-3">
             <label className="form-label fw-bold">Description</label>
-            <textarea
-              className="form-control"
-              rows="4"
+            <ReactQuill
+              theme="snow"
               value={descruption}
-              onChange={(e) => setDescruption(e.target.value)}
+              onChange={setDescruption}
+              placeholder="Write your blog here..."
             />
           </div>
 
@@ -127,13 +130,11 @@ const Addblogs = () => {
             />
           </div>
 
-          <button className="btn btn-primary w-25 fw-bold">
-            ADD Blog
-          </button>
+          <button className="btn btn-primary w-25 fw-bold">ADD Blog</button>
         </form>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default Addblogs
+export default Addblogs;
