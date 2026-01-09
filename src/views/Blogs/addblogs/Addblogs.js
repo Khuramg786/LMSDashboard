@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const Addblogs = () => {
   const [title, setTitle] = useState('')
@@ -13,10 +15,10 @@ const Addblogs = () => {
   const navigate = useNavigate()
 
   const registerProduct = async (e) => {
-    e.preventDefault() // ✅ VERY IMPORTANT
+    e.preventDefault()
 
     if (!title || !createdby || !categary) {
-      alert('Please fill required fields')
+      toast.error('⚠️ Please fill required fields')
       return
     }
 
@@ -30,25 +32,33 @@ const Addblogs = () => {
       if (image) formData.append('image', image)
 
       const res = await axios.post(
-        'http://localhost:5000/blog/postbloges',
+        'https://lms-backend-umup.onrender.com/blog/postbloges',
         formData
       )
 
       if (res.status === 201) {
-        alert('Course added successfully!')
-        navigate('/Blogs/Getblogs') // ✅ FIXED PATH
+        toast.success('✅ Blog added successfully!', {
+          position: "top-center",
+          autoClose: 2000,
+          theme: "colored"
+        })
+
+        setTimeout(() => {
+          navigate('/Blogs/Getblogs')
+        }, 2000)
       }
     } catch (error) {
       console.error(error)
-      alert('Something went wrong')
+      toast.error('❌ Something went wrong')
     }
   }
 
   return (
     <>
-      <h1 className="text-center my-4 fw-bold fs-4">
-        Add Blogs
-      </h1>
+      {/* 🔔 TOAST CONTAINER */}
+      <ToastContainer />
+
+      <h1 className="text-center my-4 fw-bold fs-4">Add Blogs</h1>
 
       <div className="container w-50">
         <form onSubmit={registerProduct}>
@@ -59,7 +69,6 @@ const Addblogs = () => {
               className="form-control"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              required
             />
           </div>
 
@@ -74,34 +83,38 @@ const Addblogs = () => {
           </div>
 
           <div className="mb-3">
-            <label className="form-label fw-bold">Created-By</label>
-            <textarea
+            <label className="form-label fw-bold">Created By</label>
+            <input
               className="form-control"
-              type="text"
               value={createdby}
               onChange={(e) => setCreatedby(e.target.value)}
             />
           </div>
+
           <div className="mb-3">
-            <label className="form-label fw-bold">Timeread</label>
+            <label className="form-label fw-bold">Time Read</label>
             <input
               type="number"
               className="form-control"
               value={timeread}
               onChange={(e) => setTimeread(e.target.value)}
-              required
             />
           </div>
 
           <div className="mb-3">
             <label className="form-label fw-bold">Category</label>
-            <input
-              type="text"
+            <select
               className="form-control"
               value={categary}
               onChange={(e) => setCategary(e.target.value)}
-              required
-            />
+            >
+              <option value="">Select Course Category</option>
+              <option value="Business">Business</option>
+              <option value="Physical Health">Physical Health</option>
+              <option value="Business, Physical Health">
+                Business, Physical Health
+              </option>
+            </select>
           </div>
 
           <div className="mb-3">
@@ -114,8 +127,7 @@ const Addblogs = () => {
             />
           </div>
 
-          <button type="submit" className="btn btn-primary mt-3 mb-3 w-25 fw-bold"
-          >
+          <button className="btn btn-primary w-25 fw-bold">
             ADD Blog
           </button>
         </form>
@@ -124,4 +136,4 @@ const Addblogs = () => {
   )
 }
 
-export default Addblogs;
+export default Addblogs

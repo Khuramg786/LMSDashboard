@@ -1,50 +1,55 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Addviews = () => {
-  const [review, setReview] = useState('')
-  const [user, setUser] = useState('')
-  const [category, setCategory] = useState('')
-  const [image, setImage] = useState(null)
+  const [review, setReview] = useState('');
+  const [user, setUser] = useState('');
+  const [category, setCategory] = useState('');
+  const [image, setImage] = useState(null);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const registerProduct = async (e) => {
-    e.preventDefault() // ✅ VERY IMPORTANT
+    e.preventDefault(); // VERY IMPORTANT
 
     if (!review || !user || !category) {
-      alert('Please fill required fields')
-      return
+      toast.error('❌ Please fill all required fields');
+      return;
     }
 
     try {
-      const formData = new FormData()
-      formData.append('review', review)
-      formData.append('user', user)
-      formData.append('category', category)
-      if (image) formData.append('image', image)
+      const formData = new FormData();
+      formData.append('review', review);
+      formData.append('user', user);
+      formData.append('category', category);
+      if (image) formData.append('image', image);
 
       const res = await axios.post(
-        'http://localhost:5000/reviews/postreviews',
+        'https://lms-backend-umup.onrender.com/reviews/postreviews',
         formData
-      )
+      );
 
       if (res.status === 201) {
-        alert('Course added successfully!')
-        navigate('/Blogs/Getblogs') // ✅ FIXED PATH
+        toast.success('✅ Review added successfully!');
+        setTimeout(() => navigate('/Blogs/Getblogs'), 1500); // redirect after toast
+      } else {
+        toast.error('❌ Failed to add review');
       }
     } catch (error) {
-      console.error(error)
-      alert('Something went wrong')
+      console.error(error);
+      toast.error('❌ Something went wrong');
     }
-  }
+  };
 
   return (
     <>
-      <h1 className="text-center my-4 fw-bold fs-4">
-        Add Review
-      </h1>
+      {/* Toast Container */}
+      <ToastContainer position="top-right" autoClose={3000} />
+
+      <h1 className="text-center my-4 fw-bold fs-4">Add Review</h1>
 
       <div className="container w-50">
         <form onSubmit={registerProduct}>
@@ -70,8 +75,6 @@ const Addviews = () => {
             />
           </div>
 
-
-
           <div className="mb-3">
             <label className="form-label fw-bold">Category</label>
             <select
@@ -80,12 +83,16 @@ const Addviews = () => {
               onChange={(e) => setCategory(e.target.value)}
             >
               <option value="">Select Course Category</option>
-              <option value="Web Development">Web Development</option>
-              <option value="Mobile App Development">Mobile App Development</option>
-              <option value="UI/UX Design">UI/UX Design</option>
-              <option value="Graphic Design">Graphic Design</option>
-              <option value="Digital Marketing">Digital Marketing</option>
-              <option value="SEO">SEO</option>
+              <option value="Business Growth Club">Business Growth Club</option>
+              <option value="Team Management Skills Club">Team Management Skills Club</option>
+              <option value="Sales Booster Training">Sales Booster Training</option>
+              <option value="Mental Wellness">Mental Wellness</option>
+              <option value="Financial Management">Financial Management</option>
+              <option value="Relation Building">Relation Building</option>
+              <option value="Physical Health">Physical Health</option>
+              <option value="Social Awareness">Social Awareness</option>
+              <option value="Spiritual Awakening">Spiritual Awakening</option>
+              <option value="Leadership Skills for Principals">Leadership Skills for Principals</option>
             </select>
           </div>
 
@@ -105,7 +112,7 @@ const Addviews = () => {
         </form>
       </div>
     </>
-  )
-}
+  );
+};
 
 export default Addviews;

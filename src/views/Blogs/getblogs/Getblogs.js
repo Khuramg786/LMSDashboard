@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Getblogs = () => {
   const [blogs, setBlogs] = useState([]);
@@ -7,107 +9,111 @@ const Getblogs = () => {
 
   // form states
   const [title, setTitle] = useState("");
-  const [descruption, setDescruption] = useState('')
-  const [createdby, setCreatedby] = useState('')
-  const [timeread, setTimeread] = useState('')
-  const [categary, setCategary] = useState('')
+  const [description, setDescription] = useState("");
+  const [createdby, setCreatedby] = useState("");
+  const [timeread, setTimeread] = useState("");
+  const [category, setCategory] = useState("");
   const [image, setImage] = useState(null);
 
-  // ================= GET COURSES ON LOAD =================
-  useEffect(() => {
-    fetch("http://localhost:5000/blog/getblogs")
-      .then((res) => res.json())
-      .then((data) => setBlogs(data.blogs || []))
-      .catch((err) => console.log("Error fetching blogs:", err));
-  }, []);
-
-  // ================= DELETE COURSE =================
-  const deleteCourse = async (id) => {
-    if (!window.confirm("Delete this blogs?")) return;
-
-    // Optimistically remove from UI
-    setBlogs((prev) => prev.filter((c) => c._id !== id));
-
+  // ================= FETCH COURSES =================
+  const fetchCourses = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/blog/deletebloges/${id}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(
+        "https://lms-backend-umup.onrender.com/blog/getblogs"
+      );
       const data = await res.json();
-      if (!data.success) {
-        alert("Delete failed: " + data.message);
-        // Revert UI if delete fails
-        fetchCourses();
-      }
+      setBlogs(data.blogs || []);
     } catch (err) {
-      console.log("Error deleting Blogs:", err);
-      alert("Something went wrong while deleting");
-      fetchCourses(); // revert
+      toast.error("❌ Failed to fetch blogs");
     }
   };
 
-  // ================= OPEN UPDATE MODAL =================
-  const openModal = (blog) => {
-    setCurrentId(blog._id);
-    setTitle(blog.title);
-    setDescruption(blog.descruption);
-    setCreatedby(blog.createdby);
-    setTimeread(blog.timeread);
-    setCategary(blog.categary);
-    setImage(null);
-    setShowModal(true);
-  };
+  useEffect(() => {
+    fetchCourses();
+  }, []);
 
-  // ================= UPDATE COURSE =================
-  const updateCourse = async () => {
-    const formData = new FormData();
-formData.append("title", title);
-formData.append("descruption", descruption);
-formData.append("createdby", createdby);
-formData.append("timeread", timeread);
-formData.append("categary", categary);
-
-    if (image) formData.append("image", image);
+  // ================= DELETE =================
+  const deleteCourse = async (id) => {
+    // if (!window.confirm("Delete this course?")) return;
 
     try {
       const res = await fetch(
-        `http://localhost:5000/blog/updateblog/${currentId}`,
-        { method: "PUT", body: formData }
+        `https://lms-backend-umup.onrender.com/blog/deletebloges/${id}`,
+        { method: "DELETE" }
       );
       const data = await res.json();
 
       if (data.success) {
-        setShowModal(false);
-
-        // Update UI instantly without refetching
-        setBlogs((prev) =>
-          prev.map((c) => (c._id === currentId ? data.blogs : c))
-        );
+        toast.success("✅ Blog deleted successfully!");
+        setBlogs((prev) => prev.filter((c) => c._id !== id));
       } else {
-        alert("Update failed: " + data.message);
+        toast.error("❌ Delete failed");
       }
     } catch (err) {
-      console.log("Error updating blogs:", err);
-      alert("Something went wrong while updating");
+      toast.error("❌ Network error");
+    }
+  };
+
+  // ================= OPEN MODAL =================
+  const openModal = (blog) => {
+    setCurrentId(blog._id);
+    setTitle(blog.title);
+    setDescription(blog.descruption); // backend field is descruption
+    setCreatedby(blog.createdby);
+    setTimeread(blog.timeread);
+    setCategory(blog.categary); // backend field is categary
+    setImage(null);
+    setShowModal(true);
+  };
+
+  // ================= UPDATE =================
+  const updateCourse = async () => {
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("descruption", description);
+    formData.append("createdby", createdby);
+    formData.append("timeread", timeread);
+    formData.append("categary", category);
+    if (image) formData.append("image", image);
+
+    try {
+      const res = await fetch(
+        `https://lms-backend-umup.onrender.com/blog/updateblog/${currentId}`,
+        { method: "PUT", body: formData }
+      );
+
+      const data = await res.json();
+
+      if (data.success) {
+        toast.success("✅ Blog updated successfully!");
+        setBlogs((prev) =>
+          prev.map((c) => (c._id === currentId ? data.updatedBlog : c))
+        );
+        setShowModal(false);
+      } else {
+        toast.error("❌ Update failed");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("❌ Network error");
     }
   };
 
   return (
     <>
       <div className="container w-75">
-        <h3 className="text-center my-4 fw-bold ">
-         Blogs List
-        </h3>
+        <h3 className="text-center my-4 fw-bold text-white">Blogs List</h3>
 
-        <table className="table table-bordered table-hover text-center">
+        <table className="table table-bordered text-center">
           <thead className="table-dark">
             <tr>
               <th>#</th>
               <th>Image</th>
               <th>Title</th>
-              <th>Descruption</th>
-              <th>createdby</th>
-              <th>Timeread</th>
-              <th>categary</th>
+              <th>Description</th>
+              <th>Created By</th>
+              <th>Time Read</th>
+              <th>Category</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -120,7 +126,7 @@ formData.append("categary", categary);
                   <td>
                     <img
                       src={c.imageUrl}
-                      alt="course"
+                      alt="blog"
                       width="70"
                       height="70"
                       style={{ borderRadius: 10, objectFit: "cover" }}
@@ -131,26 +137,25 @@ formData.append("categary", categary);
                   <td>{c.createdby}</td>
                   <td>{c.timeread}</td>
                   <td>{c.categary}</td>
-                 <td>
-  <button
-    className="btn btn-warning btn-sm mx-1 fw-bold text-white"
-    onClick={() => openModal(c)}
-  >
-    Update
-  </button>
-  <button
-    className="btn btn-danger btn-sm fw-bold text-white"
-    onClick={() => deleteCourse(c._id)}
-  >
-    Delete
-  </button>
-</td>
-
+                  <td>
+                    <button
+                      className="btn btn-warning btn-sm mx-1 fw-bold text-white"
+                      onClick={() => openModal(c)}
+                    >
+                      Update
+                    </button>
+                    <button
+                      className="btn btn-danger btn-sm fw-bold text-white"
+                      onClick={() => deleteCourse(c._id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="6">No courses found</td>
+                <td colSpan="8">No blogs found</td>
               </tr>
             )}
           </tbody>
@@ -159,55 +164,58 @@ formData.append("categary", categary);
 
       {/* ================= UPDATE MODAL ================= */}
       {showModal && (
-        <div
-          className="modal d-block"
-          style={{ background: "rgba(0,0,0,0.6)" }}
-        >
+        <div className="modal d-block" style={{ background: "rgba(0,0,0,0.6)" }}>
           <div className="modal-dialog">
             <div className="modal-content p-3">
-              <h5 className="fw-bold mb-3">Update Course</h5>
-            <label className="form-label fw-bold">Title</label>
+              <h5 className="fw-bold mb-3">Update Blog</h5>
 
+              <label className="form-label fw-bold">Title</label>
               <input
                 className="form-control mb-2"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Title"
               />
-            <label className="form-label fw-bold">Description</label>
 
+              <label className="form-label fw-bold">Description</label>
               <textarea
                 className="form-control mb-2"
-                value={descruption}
-                onChange={(e) => setDescruption(e.target.value)}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
                 placeholder="Description"
               />
-            <label className="form-label fw-bold">Created-by</label>
 
+              <label className="form-label fw-bold">Created By</label>
               <input
                 className="form-control mb-2"
                 value={createdby}
                 onChange={(e) => setCreatedby(e.target.value)}
-                placeholder="Createdby"
+                placeholder="Created By"
               />
-            <label className="form-label fw-bold">Timeread</label>
 
+              <label className="form-label fw-bold">Time Read</label>
               <input
                 className="form-control mb-2"
                 value={timeread}
                 onChange={(e) => setTimeread(e.target.value)}
-                placeholder="Timeread"
+                placeholder="Time Read"
               />
-            <label className="form-label fw-bold">Categary</label>
 
-              <input
+              <label className="form-label fw-bold">Category</label>
+              <select
                 className="form-control mb-2"
-                value={categary}
-                onChange={(e) => setCategary(e.target.value)}
-                placeholder="Category"
-              />
-            <label className="form-label fw-bold">Image</label>
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                <option value="">Select Category</option>
+                <option value="Business">Business</option>
+                <option value="Physical Health">Physical Health</option>
+                <option value="Business, Physical Health">
+                  Business, Physical Health
+                </option>
+              </select>
 
+              <label className="form-label fw-bold">Image</label>
               <input
                 type="file"
                 className="form-control mb-3"
@@ -222,7 +230,10 @@ formData.append("categary", categary);
                 >
                   Cancel
                 </button>
-                <button className="btn btn-success fw-bold text-white" onClick={updateCourse}>
+                <button
+                  className="btn btn-success fw-bold text-white"
+                  onClick={updateCourse}
+                >
                   Save
                 </button>
               </div>
@@ -230,6 +241,8 @@ formData.append("categary", categary);
           </div>
         </div>
       )}
+
+      <ToastContainer position="top-right" autoClose={3000} />
     </>
   );
 };

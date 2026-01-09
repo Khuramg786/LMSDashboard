@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Getcourses = () => {
   const [courses, setCourses] = useState([]);
@@ -7,21 +9,24 @@ const Getcourses = () => {
 
   // form states
   const [title, setTitle] = useState("");
+  const [level, setLevel] = useState("");
+  const [lang, setLang] = useState("");
   const [discruption, setDiscruption] = useState("");
   const [price, setPrice] = useState("");
   const [discount, setDiscount] = useState("");
   const [category, setCategory] = useState("");
   const [image, setImage] = useState(null);
-
-  const [whatYouWillLearn, setWhatYouWillLearn] = useState([
-    "", "", "", "", "", ""
-  ]);
+  const [whatYouWillLearn, setWhatYouWillLearn] = useState(["", "", "", "", "", ""]);
 
   // ================= FETCH COURSES =================
   const fetchCourses = async () => {
-    const res = await fetch("http://localhost:5000/course/getcourse");
-    const data = await res.json();
-    setCourses(data.courses || []);
+    try {
+      const res = await fetch("https://lms-backend-umup.onrender.com/course/getcourse");
+      const data = await res.json();
+      setCourses(data.courses || []);
+    } catch (err) {
+      toast.error("❌ Failed to fetch courses");
+    }
   };
 
   useEffect(() => {
@@ -30,32 +35,50 @@ const Getcourses = () => {
 
   // ================= DELETE =================
   const deleteCourse = async (id) => {
-    if (!window.confirm("Delete this course?")) return;
 
-    await fetch(`http://localhost:5000/course/delete/${id}`, {
-      method: "DELETE",
-    });
+    try {
+      const res = await fetch(`https://lms-backend-umup.onrender.com/course/delete/${id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
 
-    setCourses((prev) => prev.filter((c) => c._id !== id));
+      if (data.success) {
+        setCourses((prev) => prev.filter((c) => c._id !== id));
+        toast.success("✅ Course deleted successfully!");
+      } else {
+        toast.error("❌ Delete failed");
+      }
+    } catch (err) {
+      toast.error("❌ Network error");
+    }
   };
 
   // ================= OPEN MODAL =================
   const openModal = (course) => {
     setCurrentId(course._id);
     setTitle(course.title);
+    setLevel(course.level);
+    setLang(course.lang);
     setDiscruption(course.discruption);
     setPrice(course.price);
     setDiscount(course.discount);
     setCategory(course.category);
-    setWhatYouWillLearn(course.whatYouWillLearn || []);
+    setWhatYouWillLearn(course.whatYouWillLearn || ["", "", "", "", "", ""]);
     setImage(null);
     setShowModal(true);
   };
 
   // ================= UPDATE =================
   const updateCourse = async () => {
+    if (!title || !discruption || !price || !category) {
+      toast.error("❌ All required fields must be filled");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("title", title);
+    formData.append("level", level);
+    formData.append("lang", lang);
     formData.append("discruption", discruption);
     formData.append("price", price);
     formData.append("discount", discount);
@@ -67,29 +90,31 @@ const Getcourses = () => {
 
     if (image) formData.append("image", image);
 
-    const res = await fetch(
-      `http://localhost:5000/course/update/${currentId}`,
-      { method: "PUT", body: formData }
-    );
-
-    const data = await res.json();
-
-    if (data.success) {
-      setCourses((prev) =>
-        prev.map((c) => (c._id === currentId ? data.course : c))
+    try {
+      const res = await fetch(
+        `https://lms-backend-umup.onrender.com/course/update/${currentId}`,
+        { method: "PUT", body: formData }
       );
-      setShowModal(false);
-    } else {
-      alert("Update failed");
+
+      const data = await res.json();
+
+      if (data.success) {
+        setCourses((prev) => prev.map((c) => (c._id === currentId ? data.course : c)));
+        setShowModal(false);
+        toast.success("✅ Course updated successfully!");
+      } else {
+        toast.error("❌ Update failed");
+      }
+    } catch (err) {
+      toast.error("❌ Network error");
     }
   };
 
   return (
     <>
+      <ToastContainer position="top-right" autoClose={3000} />
       <div className="container w-75">
-        <h3 className="text-center my-4 fw-bold text-white">
-          Courses List
-        </h3>
+        <h3 className="text-center my-4 fw-bold text-white">Courses List</h3>
 
         <table className="table table-bordered text-center">
           <thead className="table-dark">
@@ -100,45 +125,55 @@ const Getcourses = () => {
               <th>Discruption</th>
               <th>Price</th>
               <th>Discount</th>
+              <th>Level</th>
+              <th>Language</th>
               <th>Category</th>
               <th>Action</th>
             </tr>
           </thead>
 
           <tbody>
-            {courses.map((c, i) => (
-              <tr key={c._id}>
-                <td>{i + 1}</td>
-                <td>
-                  <img
-                    src={c.imageUrl}
-                    alt=""
-                    width="70"
-                    height="70"
-                    style={{ borderRadius: 10 }}
-                  />
-                </td>
-                <td>{c.title}</td>
-                <td>{c.discruption}</td>
-                <td>{c.price}</td>
-                <td>{c.discount}</td>
-                <td>{c.category}</td>
-                <td>
-                  <button
-                    className="btn btn-warning btn-sm mx-1 text-white fw-bold"
-                    onClick={() => openModal(c)}
-                  >
-                    Update
-                  </button>
-                  <button
-                    className="btn btn-danger btn-sm text-white fw-bold"
-                    onClick={() => deleteCourse(c._id)}
-                  >
-                    Delete
-                  </button>
-                </td>
+            {courses.length ? (
+              courses.map((c, i) => (
+                <tr key={c._id}>
+                  <td>{i + 1}</td>
+                  <td>
+                    <img
+                      src={c.imageUrl}
+                      alt={c.title}
+                      width="70"
+                      height="70"
+                      style={{ borderRadius: 10, objectFit: "cover" }}
+                    />
+                  </td>
+                  <td>{c.title}</td>
+                  <td>{c.discruption}</td>
+                  <td>{c.price}</td>
+                  <td>{c.discount}</td>
+                  <td>{c.level}</td>
+                  <td>{c.lang}</td>
+                  <td>{c.category}</td>
+                  <td>
+                    <button
+                      className="btn btn-warning btn-sm mx-1 text-white fw-bold"
+                      onClick={() => openModal(c)}
+                    >
+                      Update
+                    </button>
+                    <button
+                      className="btn btn-danger btn-sm text-white fw-bold"
+                      onClick={() => deleteCourse(c._id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="8">No courses found</td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
@@ -148,45 +183,95 @@ const Getcourses = () => {
         <div className="modal d-block" style={{ background: "#0009" }}>
           <div className="modal-dialog">
             <div className="modal-content p-3">
-              <h5>Update Course</h5>
-              <label className="form-label fw-bold">Blog Title</label>
+              <h5 className="fw-bold mb-3">Update Course</h5>
+
+              <label className="form-label fw-bold">Category</label>
               <select
                 className="form-control mb-2"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
               >
-                <option value="">Select Category</option>
-                <option value="Web Development">Web Development</option>
-                <option value="Mobile App Development">Mobile App Development</option>
-                <option value="UI/UX Design">UI/UX Design</option>
-                <option value="Graphic Design">Graphic Design</option>
-                <option value="Digital Marketing">Digital Marketing</option>
-                <option value="SEO">SEO</option>
+                <option value="">Select Course Category</option>
+                <option value="Business Growth Club">Business Growth Club</option>
+                <option value="Team Management Skills Club">Team Management Skills Club</option>
+                <option value="Sales Booster Training">Sales Booster Training</option>
+                <option value="Mental Wellness">Mental Wellness</option>
+                <option value="Financial Management">Financial Management</option>
+                <option value="Relation Building">Relation Building</option>
+                <option value="Physical Health">Physical Health</option>
+                <option value="Social Awareness">Social Awareness</option>
+                <option value="Spiritual Awakening">Spiritual Awakening</option>
+                <option value="Leadership Skills for Principals">Leadership Skills for Principals</option>
               </select>
+
               <label className="form-label fw-bold">Title</label>
-              <input className="form-control mb-2" value={title}
-                onChange={(e) => setTitle(e.target.value)} />
+              <input
+                className="form-control mb-2"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+
               <label className="form-label fw-bold">Discruption</label>
-              <textarea className="form-control mb-2" value={discruption}
-                onChange={(e) => setDiscruption(e.target.value)} />
+              <textarea
+                className="form-control mb-2"
+                value={discruption}
+                onChange={(e) => setDiscruption(e.target.value)}
+              />
+
               <label className="form-label fw-bold">Price</label>
-              <input className="form-control mb-2" value={price}
-                onChange={(e) => setPrice(e.target.value)} />
+              <input
+                className="form-control mb-2"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+              />
+
               <label className="form-label fw-bold">Discount</label>
-              <input className="form-control mb-2" value={discount}
-                onChange={(e) => setDiscount(e.target.value)} />
+              <input
+                className="form-control mb-2"
+                value={discount}
+                onChange={(e) => setDiscount(e.target.value)}
+              />
+
+              <select
+                className="form-control mb-2"
+                value={level}
+                onChange={(e) => setLevel(e.target.value)}
+              >
+                <option value="">Select Level</option>
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="All Level">All Level</option>
+                <option value="Advanced">Advanced</option>
+
+              </select>
+
+              <select
+                className="form-control mb-2"
+                value={lang}
+                onChange={(e) => setLang(e.target.value)}
+              >
+                <option value="">Select Language</option>
+                <option value="Beginner">Urdu</option>
+                <option value="Intermediate">English</option>
+
+              </select>
+
+
 
               <label className="form-label fw-bold">Image</label>
+              <input
+                type="file"
+                className="form-control mb-3"
+                onChange={(e) => setImage(e.target.files[0])}
+              />
 
-              <input type="file" className="form-control mb-3"
-                onChange={(e) => setImage(e.target.files[0])} />
               <label className="form-label fw-bold">What you'll learn</label>
               {whatYouWillLearn.map((item, i) => (
                 <input
                   key={i}
                   className="form-control mb-2"
-                  value={item}
                   placeholder={`Learn ${i + 1}`}
+                  value={item}
                   onChange={(e) => {
                     const updated = [...whatYouWillLearn];
                     updated[i] = e.target.value;
@@ -195,13 +280,19 @@ const Getcourses = () => {
                 />
               ))}
 
-
-
               <div className="text-end">
-                <button className="btn btn-secondary mx-1 fw-bold"
-                  onClick={() => setShowModal(false)}>Cancel</button>
-                <button className="btn btn-success fw-bold text-white"
-                  onClick={updateCourse}>Save</button>
+                <button
+                  className="btn btn-secondary mx-1 fw-bold"
+                  onClick={() => setShowModal(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="btn btn-success fw-bold text-white"
+                  onClick={updateCourse}
+                >
+                  Save
+                </button>
               </div>
             </div>
           </div>
