@@ -34,7 +34,7 @@ const Addviews = () => {
 
       if (res.status === 201) {
         toast.success('✅ Review added successfully!');
-        setTimeout(() => navigate('/Blogs/Getblogs'), 1500); // redirect after toast
+        setTimeout(() => navigate('/Blogs/GetReviews'), 1500); // redirect after toast
       } else {
         toast.error('❌ Failed to add review');
       }
