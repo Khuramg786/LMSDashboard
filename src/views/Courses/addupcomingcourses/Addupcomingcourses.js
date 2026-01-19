@@ -14,12 +14,28 @@ const Addupcomingcourses = () => {
   const [studentenroll, setStudentenroll] = useState("");
   const [image, setImage] = useState(null);
 
+  const [recordingDate, setRecordingDate] = useState("");
+  const [duration, setDuration] = useState("");
+  const [day, setDay] = useState("");
+  const [time, setTime] = useState("");
+
   const [whatYouWillLearn, setWhatYouWillLearn] = useState(["", "", "", "", "", ""]);
 
   // ================= HANDLE SUBMIT =================
   const handleSubmit = async () => {
     // Validation
-    if (!title || !discruption || !price || !discount || !studentenroll || !image) {
+    if (
+      !title ||
+      !discruption ||
+      !price ||
+      !discount ||
+      !studentenroll ||
+      !image ||
+      !recordingDate ||
+      !duration ||
+      !day ||
+      !time
+    ) {
       toast.error("❌ All required fields must be filled");
       return;
     }
@@ -32,6 +48,10 @@ const Addupcomingcourses = () => {
     formData.append("discount", discount);
     formData.append("studentenroll", studentenroll);
     formData.append("image", image);
+    formData.append("recordingDate", recordingDate);
+    formData.append("duration", duration);
+    formData.append("day", day);
+    formData.append("time", time);
 
     whatYouWillLearn.forEach((item) => {
       if (item.trim()) {
@@ -41,7 +61,7 @@ const Addupcomingcourses = () => {
 
     try {
       const res = await axios.post(
-        "https://lms-backend-umup.onrender.com/upcomings/createupcoming",
+        "http://localhost:5000/upcomings/createupcoming",
         formData
       );
 
@@ -84,14 +104,14 @@ const Addupcomingcourses = () => {
         <input
           type="number"
           className="form-control mb-2"
-          placeholder="Course Price"
+          placeholder="Rec Course Price"
           value={price}
           onChange={(e) => setPrice(e.target.value)}
         />
         <input
           type="number"
           className="form-control mb-2"
-          placeholder="Course Discount"
+          placeholder="Live Course Price"
           value={discount}
           onChange={(e) => setDiscount(e.target.value)}
         />
@@ -111,6 +131,48 @@ const Addupcomingcourses = () => {
           className="form-control mb-3"
           accept="image/*"
           onChange={(e) => setImage(e.target.files[0])}
+        />
+
+        {/* ================= RECORDING DATE & START ================= */}
+        <input
+          type="date"
+          className="form-control mb-2"
+          placeholder="Recording Date"
+          value={recordingDate}
+          onChange={(e) => setRecordingDate(e.target.value)}
+        />
+      {/* ================= COURSE DURATION ================= */}
+<input
+  type="number"
+  className="form-control mb-2"
+  placeholder="Course Duration (in days)"
+  value={duration}
+  onChange={(e) => setDuration(e.target.value)}
+  min="1"
+/>
+
+       {/* ================= DAY SELECTOR ================= */}
+<select
+  className="form-control mb-2"
+  value={day}
+  onChange={(e) => setDay(e.target.value)}
+>
+  <option value="">Select Day</option>
+  <option value="Monday">Monday</option>
+  <option value="Tuesday">Tuesday</option>
+  <option value="Wednesday">Wednesday</option>
+  <option value="Thursday">Thursday</option>
+  <option value="Friday">Friday</option>
+  <option value="Saturday">Saturday</option>
+  <option value="Sunday">Sunday</option>
+</select>
+
+        <input
+          type="time"
+          className="form-control mb-3"
+          placeholder="Time"
+          value={time}
+          onChange={(e) => setTime(e.target.value)}
         />
 
         {/* ================= WHAT YOU WILL LEARN ================= */}

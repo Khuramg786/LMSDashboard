@@ -106,7 +106,7 @@ const AddCourses = () => {
         <input
           type="number"
           className="form-control mb-2"
-          placeholder="Course Price"
+          placeholder="Rec Course Price"
           value={price}
           onChange={(e) => setPrice(e.target.value)}
         />
@@ -114,7 +114,7 @@ const AddCourses = () => {
         <input
           type="number"
           className="form-control mb-2"
-          placeholder="Course Discount"
+          placeholder="Rec Live Course Price"
           value={discount}
           onChange={(e) => setDiscount(e.target.value)}
         />

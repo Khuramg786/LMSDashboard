@@ -123,8 +123,8 @@ const Getcourses = () => {
               <th>Image</th>
               <th>Title</th>
               <th>Discruption</th>
-              <th>Price</th>
-              <th>Discount</th>
+              <th>Rec Course Price</th>
+              <th>Live Course Price</th>
               <th>Level</th>
               <th>Language</th>
               <th>Category</th>
@@ -218,14 +218,14 @@ const Getcourses = () => {
                 onChange={(e) => setDiscruption(e.target.value)}
               />
 
-              <label className="form-label fw-bold">Price</label>
+              <label className="form-label fw-bold">Rec Course Price</label>
               <input
                 className="form-control mb-2"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
               />
 
-              <label className="form-label fw-bold">Discount</label>
+              <label className="form-label fw-bold">Live Course Price</label>
               <input
                 className="form-control mb-2"
                 value={discount}
