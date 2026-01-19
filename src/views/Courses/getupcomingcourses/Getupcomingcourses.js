@@ -26,7 +26,7 @@ const Getupcomingcourses = () => {
   // ================= FETCH COURSES =================
   const fetchCourses = async () => {
     try {
-      const res = await fetch("http://localhost:5000/upcomings/getUpcoming");
+      const res = await fetch("https://lms-backend-umup.onrender.com/upcomings/getUpcoming");
       const data = await res.json();
       setUpcomingcourses(data.upcoming || []);
     } catch (error) {
@@ -44,7 +44,7 @@ const Getupcomingcourses = () => {
     if (!window.confirm("Delete this upcoming course?")) return;
     try {
       const res = await fetch(
-        `http://localhost:5000/upcomings/deleteupcomingcourse/${id}`,
+        `https://lms-backend-umup.onrender.com/upcomings/deleteupcomingcourse/${id}`,
         { method: "DELETE" }
       );
       const data = await res.json();

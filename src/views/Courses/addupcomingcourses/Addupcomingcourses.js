@@ -61,7 +61,7 @@ const Addupcomingcourses = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/upcomings/createupcoming",
+        "https://lms-backend-umup.onrender.com/upcomings/createupcoming",
         formData
       );
 
