@@ -9,8 +9,8 @@ const Addupcomingcourses = () => {
 
   const [title, setTitle] = useState("");
   const [discruption, setDiscruption] = useState("");
-  const [price, setPrice] = useState("");
-  const [discount, setDiscount] = useState("");
+  // const [price, setPrice] = useState("");
+  // const [discount, setDiscount] = useState("");
   const [studentenroll, setStudentenroll] = useState("");
   const [image, setImage] = useState(null);
 
@@ -27,8 +27,8 @@ const Addupcomingcourses = () => {
     if (
       !title ||
       !discruption ||
-      !price ||
-      !discount ||
+      // !price ||
+      // !discount ||
       !studentenroll ||
       !image ||
       !recordingDate ||
@@ -44,8 +44,8 @@ const Addupcomingcourses = () => {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("discruption", discruption);
-    formData.append("price", price);
-    formData.append("discount", discount);
+    // formData.append("price", price);
+    // formData.append("discount", discount);
     formData.append("studentenroll", studentenroll);
     formData.append("image", image);
     formData.append("recordingDate", recordingDate);

@@ -11,8 +11,8 @@ const Getupcomingcourses = () => {
   // form states
   const [title, setTitle] = useState("");
   const [discruption, setDiscruption] = useState("");
-  const [price, setPrice] = useState("");
-  const [discount, setDiscount] = useState("");
+  // const [price, setPrice] = useState("");
+  // const [discount, setDiscount] = useState("");
   const [studentenroll, setStudentenroll] = useState("");
   const [image, setImage] = useState(null);
   const [whatYouWillLearn, setWhatYouWillLearn] = useState(["", "", "", "", "", ""]);
@@ -63,8 +63,8 @@ const Getupcomingcourses = () => {
     setCurrentId(course._id);
     setTitle(course.title);
     setDiscruption(course.discruption);
-    setPrice(course.price);
-    setDiscount(course.discount);
+    // setPrice(course.price);
+    // setDiscount(course.discount);
     setStudentenroll(course.studentenroll);
     setWhatYouWillLearn(course.whatYouWillLearn || []);
     setImage(null);
@@ -81,7 +81,7 @@ const Getupcomingcourses = () => {
 
   // ================= UPDATE =================
   const updateCourse = async () => {
-    if (!title || !discruption || !price || !discount || !studentenroll || !recordingDate || !duration || !day || !time) {
+    if (!title || !discruption  || !studentenroll || !recordingDate || !duration || !day || !time) {
       toast.error("❌ All fields are required");
       return;
     }
@@ -89,8 +89,8 @@ const Getupcomingcourses = () => {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("discruption", discruption);
-    formData.append("price", Number(price));
-    formData.append("discount", Number(discount));
+    // formData.append("price", Number(price));
+    // formData.append("discount", Number(discount));
     formData.append("studentenroll", Number(studentenroll));
     formData.append("removeImage", removeImage);
     formData.append("recordingDate", recordingDate);
@@ -135,8 +135,8 @@ const Getupcomingcourses = () => {
               <th>Image</th>
               <th>Title</th>
               <th>Description</th>
-              <th>Rec Course Price</th>
-              <th>Live Course Price</th>
+              {/* <th>Rec Course Price</th>
+              <th>Live Course Price</th> */}
               <th>Student-Enroll</th>
               <th>Recording Date</th>
               <th>Duration (days)</th>
@@ -161,8 +161,8 @@ const Getupcomingcourses = () => {
                   </td>
                   <td>{c.title}</td>
                   <td>{c.discruption.slice(0, 70)}</td>
-                  <td>{c.price}</td>
-                  <td>{c.discount}</td>
+                  {/* <td>{c.price}</td>
+                  <td>{c.discount}</td> */}
                   <td>{c.studentenroll}</td>
                   <td>{c.recordingDate ? c.recordingDate.split("T")[0] : "-"}</td>
                   <td>{c.duration || "-"}</td>
