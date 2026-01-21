@@ -21,7 +21,7 @@ const AddCourses = () => {
   // ================= HANDLE SUBMIT =================
   const handleSubmit = async () => {
     // Validation
-    if (!title || !discruption || !price  || !category || !image) {
+    if (!title || !discruption || !price || !category || !image) {
       toast.error("❌ All required fields must be filled");
       return;
     }
@@ -83,6 +83,8 @@ const AddCourses = () => {
           <option value="Social Awareness">Social Awareness</option>
           <option value="Spiritual Awakening">Spiritual Awakening</option>
           <option value="Leadership Skills for Principals">Leadership Skills for Principals</option>
+          <option value="6 Health Club">6 Health Club</option>
+          <option value="Team Management Skills Club">Team Management Skills Club</option>
         </select>
 
         {/* ================= COURSE TITLE ================= */}

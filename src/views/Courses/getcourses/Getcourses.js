@@ -147,7 +147,7 @@ const Getcourses = () => {
                     />
                   </td>
                   <td>{c.title}</td>
-                  <td>{c.discruption.slice(0,70)}</td>
+                  <td>{c.discruption.slice(0, 70)}</td>
                   <td>{c.price}</td>
                   <td>{c.discount}</td>
                   <td>{c.level}</td>
@@ -202,6 +202,8 @@ const Getcourses = () => {
                 <option value="Social Awareness">Social Awareness</option>
                 <option value="Spiritual Awakening">Spiritual Awakening</option>
                 <option value="Leadership Skills for Principals">Leadership Skills for Principals</option>
+                <option value="6 Health Club">6 Health Club</option>
+                <option value="Team Management Skills Club">Team Management Skills Club</option>
               </select>
 
               <label className="form-label fw-bold">Title</label>
@@ -251,8 +253,8 @@ const Getcourses = () => {
                 onChange={(e) => setLang(e.target.value)}
               >
                 <option value="">Select Language</option>
-                <option value="Beginner">Urdu</option>
-                <option value="Intermediate">English</option>
+               <option value="Urdu">Urdu</option>
+          <option value="English">English</option>
 
               </select>
 

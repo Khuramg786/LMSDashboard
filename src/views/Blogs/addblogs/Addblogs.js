@@ -117,6 +117,18 @@ const Addblogs = () => {
               <option value="Business, Physical Health">
                 Business, Physical Health
               </option>
+              <option value="Business Growth Club">Business Growth Club</option>
+              <option value="Team Management Skills Club">Team Management Skills Club</option>
+              <option value="Sales Booster Training">Sales Booster Training</option>
+              <option value="Mental Wellness">Mental Wellness</option>
+              <option value="Financial Management">Financial Management</option>
+              <option value="Relation Building">Relation Building</option>
+              <option value="Physical Health">Physical Health</option>
+              <option value="Social Awareness">Social Awareness</option>
+              <option value="Spiritual Awakening">Spiritual Awakening</option>
+              <option value="Leadership Skills for Principals">Leadership Skills for Principals</option>
+              <option value="6 Health Club">6 Health Club</option>
+              <option value="Team Management Skills Club">Team Management Skills Club</option>
             </select>
           </div>
 
