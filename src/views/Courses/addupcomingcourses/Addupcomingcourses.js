@@ -101,7 +101,7 @@ const Addupcomingcourses = () => {
         />
 
         {/* ================= PRICE & DISCOUNT ================= */}
-        <input
+        {/* <input
           type="number"
           className="form-control mb-2"
           placeholder="Rec Course Price"
@@ -114,7 +114,7 @@ const Addupcomingcourses = () => {
           placeholder="Live Course Price"
           value={discount}
           onChange={(e) => setDiscount(e.target.value)}
-        />
+        /> */}
 
         {/* ================= STUDENT ENROLL ================= */}
         <input

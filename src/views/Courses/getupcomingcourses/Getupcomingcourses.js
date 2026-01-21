@@ -206,11 +206,11 @@ const Getupcomingcourses = () => {
               <label className="form-label fw-bold">Description</label>
               <textarea className="form-control mb-2" value={discruption} onChange={(e) => setDiscruption(e.target.value)} />
 
-              <label className="form-label fw-bold"> Rec Course Price</label>
+              {/* <label className="form-label fw-bold"> Rec Course Price</label>
               <input className="form-control mb-2" type="number" value={price} onChange={(e) => setPrice(e.target.value)} />
 
               <label className="form-label fw-bold">Live Course Price</label>
-              <input className="form-control mb-2" type="number" value={discount} onChange={(e) => setDiscount(e.target.value)} />
+              <input className="form-control mb-2" type="number" value={discount} onChange={(e) => setDiscount(e.target.value)} /> */}
 
               <label className="form-label fw-bold">Student Enroll</label>
               <input className="form-control mb-2" type="number" value={studentenroll} onChange={(e) => setStudentenroll(e.target.value)} />
