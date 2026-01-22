@@ -160,7 +160,7 @@ const Getupcomingcourses = () => {
                     />
                   </td>
                   <td>{c.title}</td>
-                  <td>{c.discruption.slice(0, 70)}</td>
+                  <td>{c.discruption}</td>
                   {/* <td>{c.price}</td>
                   <td>{c.discount}</td> */}
                   <td>{c.studentenroll}</td>
