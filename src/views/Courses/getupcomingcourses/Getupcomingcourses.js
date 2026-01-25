@@ -106,7 +106,7 @@ const Getupcomingcourses = () => {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/upcomings/updateupcomingcourese/${currentId}`,
+        `https://lms-backend-umup.onrender.com/upcomings/updateupcomingcourese/${currentId}`,
         { method: "PUT", body: formData }
       );
       const data = await res.json();
