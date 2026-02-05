@@ -83,8 +83,7 @@ const AddCourses = () => {
           <option value="Social Awareness">Social Awareness</option>
           <option value="Spiritual Awakening">Spiritual Awakening</option>
           <option value="Leadership Skills for Principals">Leadership Skills for Principals</option>
-          <option value="6 Health Club">6 Health Club</option>
-          <option value="Team Management and Business Coaching">Team Management and Business Coaching</option>
+          <option value="Team Management and Business Coaching">Business Coaching</option>
         </select>
 
         {/* ================= COURSE TITLE ================= */}
