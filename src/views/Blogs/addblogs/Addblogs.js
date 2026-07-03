@@ -36,7 +36,7 @@ const Addblogs = () => {
       if (image) formData.append("image", image);
 
       const res = await axios.post(
-        "https://lms-backend-umup.onrender.com/blog/postbloges",
+  "http://localhost:5000/blog/postbloges",
         formData
       );
 

@@ -12,7 +12,7 @@ const Addupcomingcourses = () => {
   // const [price, setPrice] = useState("");
   // const [discount, setDiscount] = useState("");
   const [studentenroll, setStudentenroll] = useState("");
-  const [image, setImage] = useState(null);
+const [video, setVideo] = useState("");
 
   const [recordingDate, setRecordingDate] = useState("");
   const [duration, setDuration] = useState("");
@@ -30,7 +30,7 @@ const Addupcomingcourses = () => {
       // !price ||
       // !discount ||
       !studentenroll ||
-      !image ||
+     !video ||
       !recordingDate ||
       !duration ||
       !day ||
@@ -47,7 +47,7 @@ const Addupcomingcourses = () => {
     // formData.append("price", price);
     // formData.append("discount", discount);
     formData.append("studentenroll", studentenroll);
-    formData.append("image", image);
+  formData.append("videoUrl", video);
     formData.append("recordingDate", recordingDate);
     formData.append("duration", duration);
     formData.append("day", day);
@@ -60,10 +60,22 @@ const Addupcomingcourses = () => {
     });
 
     try {
-      const res = await axios.post(
-        "https://lms-backend-umup.onrender.com/upcomings/createupcoming",
-        formData
-      );
+      const data = {
+  title,
+  discruption,
+  studentenroll,
+  videoUrl: video,
+  recordingDate,
+  duration,
+  day,
+  time,
+  whatYouWillLearn,
+};
+
+const res = await axios.post(
+  "http://localhost:5000/upcomings/createupcoming",
+  data
+);
 
       if (res.status === 201) {
         toast.success("✅ Upcoming course added successfully!");
@@ -126,12 +138,13 @@ const Addupcomingcourses = () => {
         />
 
         {/* ================= COURSE IMAGE ================= */}
-        <input
-          type="file"
-          className="form-control mb-3"
-          accept="image/*"
-          onChange={(e) => setImage(e.target.files[0])}
-        />
+ <input
+  type="text"
+  className="form-control mb-3"
+  placeholder="Paste YouTube Video Link"
+  value={video}
+  onChange={(e) => setVideo(e.target.value)}
+/>
 
         {/* ================= RECORDING DATE & START ================= */}
         <input

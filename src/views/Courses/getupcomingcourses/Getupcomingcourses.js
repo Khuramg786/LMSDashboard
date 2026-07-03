@@ -7,14 +7,14 @@ const Getupcomingcourses = () => {
   const [showModal, setShowModal] = useState(false);
   const [currentId, setCurrentId] = useState(null);
   const [removeImage, setRemoveImage] = useState(false);
-
+  const [videoUrl, setVideoUrl] = useState("");
   // form states
   const [title, setTitle] = useState("");
   const [discruption, setDiscruption] = useState("");
   // const [price, setPrice] = useState("");
   // const [discount, setDiscount] = useState("");
   const [studentenroll, setStudentenroll] = useState("");
-  const [image, setImage] = useState(null);
+  const [video, setVideo] = useState(null);
   const [whatYouWillLearn, setWhatYouWillLearn] = useState(["", "", "", "", "", ""]);
 
   // new fields
@@ -26,7 +26,7 @@ const Getupcomingcourses = () => {
   // ================= FETCH COURSES =================
   const fetchCourses = async () => {
     try {
-      const res = await fetch("https://lms-backend-umup.onrender.com/upcomings/getUpcoming");
+      const res = await fetch("http://localhost:5000/upcomings/getUpcoming");
       const data = await res.json();
       setUpcomingcourses(data.upcoming || []);
     } catch (error) {
@@ -44,7 +44,7 @@ const Getupcomingcourses = () => {
     if (!window.confirm("Delete this upcoming course?")) return;
     try {
       const res = await fetch(
-        `https://lms-backend-umup.onrender.com/upcomings/deleteupcomingcourse/${id}`,
+        `http://localhost:5000/upcomings/deleteupcomingcourse/${id}`,
         { method: "DELETE" }
       );
       const data = await res.json();
@@ -63,25 +63,25 @@ const Getupcomingcourses = () => {
     setCurrentId(course._id);
     setTitle(course.title);
     setDiscruption(course.discruption);
-    // setPrice(course.price);
-    // setDiscount(course.discount);
     setStudentenroll(course.studentenroll);
-    setWhatYouWillLearn(course.whatYouWillLearn || []);
-    setImage(null);
+
+    setWhatYouWillLearn(course.whatYouWillLearn || ["", "", "", "", "", ""]);
+
+    setVideo(null);
     setRemoveImage(false);
 
-    // Set new fields, format recordingDate for <input type="date">
     setRecordingDate(course.recordingDate ? course.recordingDate.split("T")[0] : "");
     setDuration(course.duration || "");
     setDay(course.day || "");
     setTime(course.time || "");
 
-    setShowModal(true);
+    setVideoUrl(course.videoUrl || "");   // ✅ FIXED
+    setShowModal(true);                   // must be last
   };
 
   // ================= UPDATE =================
   const updateCourse = async () => {
-    if (!title || !discruption  || !studentenroll || !recordingDate || !duration || !day || !time) {
+    if (!title || !discruption || !studentenroll || !recordingDate || !duration || !day || !time) {
       toast.error("❌ All fields are required");
       return;
     }
@@ -97,16 +97,17 @@ const Getupcomingcourses = () => {
     formData.append("duration", Number(duration));
     formData.append("day", day);
     formData.append("time", time);
+    formData.append("videoUrl", videoUrl);
 
     whatYouWillLearn.forEach((item) => {
       if (item.trim()) formData.append("whatYouWillLearn[]", item);
     });
 
-    if (image) formData.append("image", image);
+    if (video) formData.append("videoUrl", video);
 
     try {
       const res = await fetch(
-        `https://lms-backend-umup.onrender.com/upcomings/updateupcomingcourese/${currentId}`,
+        `http://localhost:5000/upcomings/updateupcomingcourese/${currentId}`,
         { method: "PUT", body: formData }
       );
       const data = await res.json();
@@ -132,7 +133,7 @@ const Getupcomingcourses = () => {
           <thead className="table-dark">
             <tr>
               <th>#</th>
-              <th>Image</th>
+              <th>Video</th>
               <th>Title</th>
               <th>Description</th>
               {/* <th>Rec Course Price</th>
@@ -151,13 +152,20 @@ const Getupcomingcourses = () => {
                 <tr key={c._id}>
                   <td>{i + 1}</td>
                   <td>
-                    <img
-                      src={c.imageUrl}
-                      alt={c.title}
-                      width="70"
-                      height="70"
-                      style={{ borderRadius: 10, objectFit: "cover" }}
-                    />
+                    <td>
+                      {c.videoUrl ? (
+                        <video
+                          width="200"
+                          height="120"
+                          controls
+                        >
+                          <source src={c.videoUrl} type="video/mp4" />
+                          Your browser does not support video tag
+                        </video>
+                      ) : (
+                        <span>No Video</span>
+                      )}
+                    </td>
                   </td>
                   <td>{c.title}</td>
                   <td>{c.discruption}</td>
@@ -214,9 +222,14 @@ const Getupcomingcourses = () => {
 
               <label className="form-label fw-bold">Student Enroll</label>
               <input className="form-control mb-2" type="number" value={studentenroll} onChange={(e) => setStudentenroll(e.target.value)} />
-
-              <label className="form-label fw-bold">Image</label>
-              <input type="file" className="form-control mb-2" onChange={(e) => setImage(e.target.files[0])} />
+              <label className="form-label fw-bold">YouTube Video Link</label>
+              <input
+                type="text"
+                className="form-control mb-2"
+                placeholder="Paste YouTube Link"
+                value={videoUrl}
+                onChange={(e) => setVideoUrl(e.target.value)}
+              />
 
               <div className="form-check mb-3">
                 <input type="checkbox" className="form-check-input" id="removeImage" checked={removeImage} onChange={(e) => setRemoveImage(e.target.checked)} />

@@ -22,7 +22,7 @@ const Getblogs = () => {
   const fetchBlogs = async () => {
     try {
       const res = await fetch(
-        "https://lms-backend-umup.onrender.com/blog/getblogs"
+        "http://localhost:5000/blog/getblogs"
       );
       const data = await res.json();
       setBlogs(data.blogs || []);
@@ -40,7 +40,7 @@ const Getblogs = () => {
 
     try {
       const res = await fetch(
-        `https://lms-backend-umup.onrender.com/blog/deletebloges/${id}`,
+        `http://localhost:5000/blog/deletebloges/${id}`,
         { method: "DELETE" }
       );
       const data = await res.json();
@@ -80,7 +80,7 @@ const Getblogs = () => {
 
     try {
       const res = await fetch(
-        `https://lms-backend-umup.onrender.com/blog/updateblog/${currentId}`,
+        `http://localhost:5000/blog/updateblog/${currentId}`,
         { method: "PUT", body: formData }
       );
 

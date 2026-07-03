@@ -6,57 +6,52 @@ import "react-toastify/dist/ReactToastify.css";
 
 const AddCourses = () => {
   const navigate = useNavigate();
-
+  const [category, setCategory] = useState("");
   const [title, setTitle] = useState("");
   const [level, setLevel] = useState("");
   const [lang, setLang] = useState("");
   const [discruption, setDiscruption] = useState("");
   const [price, setPrice] = useState("");
   const [discount, setDiscount] = useState("");
-  const [category, setCategory] = useState("");
-  const [image, setImage] = useState(null);
-
+  const [mediaUrl, setMediaUrl] = useState("");
   const [whatYouWillLearn, setWhatYouWillLearn] = useState(["", "", "", "", "", ""]);
 
   // ================= HANDLE SUBMIT =================
   const handleSubmit = async () => {
     // Validation
-    if (!title || !discruption || !price || !category || !image) {
+    if (!title || !discruption || !price || !category || !mediaUrl) {
       toast.error("❌ All required fields must be filled");
       return;
     }
 
-    // Prepare FormData
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("level", level);
-    formData.append("lang", lang);
-    formData.append("discruption", discruption);
-    formData.append("price", price);
-    formData.append("discount", discount);
-    formData.append("category", category);
-    formData.append("image", image);
-
-    whatYouWillLearn.forEach((item) => {
-      if (item.trim()) {
-        formData.append("whatYouWillLearn[]", item);
-      }
-    });
+    // [FIX]: Payload ke andar mediaUrl aur videoUrl dono keys me input bhej rahe hain
+    const payload = {
+      title,
+      level,
+      lang,
+      discruption,
+      price: price !== "" ? Number(price) : 0,
+      discount: discount !== "" ? Number(discount) : 0,
+      category,
+      mediaUrl: mediaUrl.trim(),
+      videoUrl: mediaUrl.trim(), 
+      whatYouWillLearn: whatYouWillLearn.filter(item => item.trim() !== "")
+    };
 
     try {
       const res = await axios.post(
-        "https://lms-backend-umup.onrender.com/course/upload",
-        formData
+        "http://localhost:5000/course/upload",
+        payload,
+        { headers: { "Content-Type": "application/json" } }
       );
 
-      console.log("response ", res)
       if (res.status === 201) {
         toast.success("✅ Course added successfully!");
         setTimeout(() => navigate("/Courses/Getcourses"), 1500);
       }
     } catch (error) {
       console.error(error);
-      toast.error("❌ Something went wrong");
+      toast.error("❌ Something went wrong while saving course");
     }
   };
 
@@ -130,7 +125,6 @@ const AddCourses = () => {
           <option value="Intermediate">Intermediate</option>
           <option value="All Level">All Level</option>
           <option value="Advanced">Advanced</option>
-
         </select>
 
         <select
@@ -141,15 +135,16 @@ const AddCourses = () => {
           <option value="">Select Language</option>
           <option value="Urdu">Urdu</option>
           <option value="English">English</option>
-
         </select>
 
-        {/* ================= COURSE IMAGE ================= */}
+        {/* ================= DYNAMIC MEDIA LINK INPUT ================= */}
+        <label className="form-label fw-bold mt-2">Course Thumbnail / Intro Video Link</label>
         <input
-          type="file"
-          className="form-control mb-3"
-          accept="image/*"
-          onChange={(e) => setImage(e.target.files[0])}
+          type="text"
+          className="form-control mb-2"
+          placeholder="Paste Image URL or Video URL (YouTube, MP4 etc.)"
+          value={mediaUrl}
+          onChange={(e) => setMediaUrl(e.target.value)}
         />
 
         {/* ================= WHAT YOU WILL LEARN ================= */}

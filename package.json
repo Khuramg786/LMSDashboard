@@ -25,6 +25,7 @@
     "@coreui/react": "^5.1.0",
     "@coreui/react-chartjs": "^3.0.0",
     "@coreui/utils": "^2.0.2",
+    "@hello-pangea/dnd": "^18.0.1",
     "@popperjs/core": "^2.11.8",
     "axios": "^1.8.3",
     "bootstrap": "^5.3.3",
