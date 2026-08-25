@@ -25,7 +25,7 @@ const Getcourses = () => {
   // ================= FETCH COURSES =================
   const fetchCourses = async () => {
     try {
-      const res = await fetch("http://localhost:5000/course/getcourse");
+      const res = await fetch("https://pink-leopard-364778.hostingersite.com/course/getcourse");
       const data = await res.json();
       setCourses(data.courses || []);
       setHasMoved(false); // Reset sequence button state on reload
@@ -77,8 +77,8 @@ const saveCourseSequence = async () => {
       // Ensure karein ki URL right environment endpoint standard me ho
       // Agar aap locally run kar rahe hain to localhost use karein, production ke liye new.lifechangersclub.pk
       const targetUrl = window.location.hostname === "localhost" 
-        ? `http://localhost:5000/course/update/${courseItem._id}`
-        : `http://localhost:5000/course/update/${courseItem._id}`;
+        ? `https://pink-leopard-364778.hostingersite.com/course/update/${courseItem._id}`
+        : `https://pink-leopard-364778.hostingersite.com/course/update/${courseItem._id}`;
 
       await fetch(targetUrl, {
         method: "PUT",
@@ -180,7 +180,7 @@ const saveCourseSequence = async () => {
   const deleteCourse = async (id) => {
     if (!window.confirm("Are you sure you want to delete this course?")) return;
     try {
-      const res = await fetch(`http://localhost:5000/course/delete/${id}`, {
+      const res = await fetch(`https://pink-leopard-364778.hostingersite.com/course/delete/${id}`, {
         method: "DELETE",
       });
       const data = await res.json();
@@ -228,7 +228,7 @@ const saveCourseSequence = async () => {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/course/update/${currentId}`,
+        `https://pink-leopard-364778.hostingersite.com/course/update/${currentId}`,
         {
           method: "PUT",
           headers: {

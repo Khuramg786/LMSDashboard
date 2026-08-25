@@ -22,7 +22,7 @@ const Getblogs = () => {
   const fetchBlogs = async () => {
     try {
       const res = await fetch(
-        "http://localhost:5000/blog/getblogs"
+        "https://pink-leopard-364778.hostingersite.com/blog/getblogs"
       );
       const data = await res.json();
       setBlogs(data.blogs || []);
@@ -40,7 +40,7 @@ const Getblogs = () => {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/blog/deletebloges/${id}`,
+        `https://pink-leopard-364778.hostingersite.com/blog/deletebloges/${id}`,
         { method: "DELETE" }
       );
       const data = await res.json();
@@ -80,7 +80,7 @@ const Getblogs = () => {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/blog/updateblog/${currentId}`,
+        `https://pink-leopard-364778.hostingersite.com/blog/updateblog/${currentId}`,
         { method: "PUT", body: formData }
       );
 

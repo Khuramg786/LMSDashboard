@@ -36,7 +36,7 @@ const Addblogs = () => {
       if (image) formData.append("image", image);
 
       const res = await axios.post(
-  "http://localhost:5000/blog/postbloges",
+  "https://pink-leopard-364778.hostingersite.com/blog/postbloges",
         formData
       );
 

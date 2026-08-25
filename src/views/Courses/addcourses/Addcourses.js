@@ -17,43 +17,75 @@ const AddCourses = () => {
   const [whatYouWillLearn, setWhatYouWillLearn] = useState(["", "", "", "", "", ""]);
 
   // ================= HANDLE SUBMIT =================
-  const handleSubmit = async () => {
-    // Validation
-    if (!title || !discruption || !price || !category || !mediaUrl) {
-      toast.error("❌ All required fields must be filled");
-      return;
-    }
+const handleSubmit = async () => {
+  // Validation
+  if (!title || !discruption || !price || !category || !mediaUrl) {
+    toast.error("❌ All required fields must be filled");
+    return;
+  }
 
-    // [FIX]: Payload ke andar mediaUrl aur videoUrl dono keys me input bhej rahe hain
-    const payload = {
-      title,
-      level,
-      lang,
-      discruption,
-      price: price !== "" ? Number(price) : 0,
-      discount: discount !== "" ? Number(discount) : 0,
-      category,
-      mediaUrl: mediaUrl.trim(),
-      videoUrl: mediaUrl.trim(), 
-      whatYouWillLearn: whatYouWillLearn.filter(item => item.trim() !== "")
-    };
+  const cleanMediaUrl = mediaUrl
+    .trim()
+    .replace(/^\[/, "")
+    .replace(/\]\(.*\)$/, "");
 
-    try {
-      const res = await axios.post(
-        "http://localhost:5000/course/upload",
-        payload,
-        { headers: { "Content-Type": "application/json" } }
-      );
+  const payload = {
+    title,
+    level,
+    lang,
+    discruption,
 
-      if (res.status === 201) {
-        toast.success("✅ Course added successfully!");
-        setTimeout(() => navigate("/Courses/Getcourses"), 1500);
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("❌ Something went wrong while saving course");
-    }
+    price: price !== "" ? Number(price) : 0,
+
+    discount: discount !== "" ? Number(discount) : 0,
+
+    category,
+
+    mediaUrl: cleanMediaUrl,
+
+    videoUrl: cleanMediaUrl,
+
+    whatYouWillLearn: whatYouWillLearn.filter(
+      (item) => item.trim() !== ""
+    ),
   };
+
+  console.log("SENDING COURSE DATA:", payload);
+
+  try {
+    const res = await axios.post(
+      "https://pink-leopard-364778.hostingersite.com/course/upload",
+      payload,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    console.log("COURSE RESPONSE:", res.data);
+
+    if (res.status === 201) {
+      toast.success("✅ Course added successfully!");
+
+      setTimeout(() => {
+        navigate("/Courses/Getcourses");
+      }, 1500);
+    }
+  } catch (error) {
+    console.error("COURSE ERROR:", error);
+
+    console.error(
+      "SERVER RESPONSE:",
+      error.response?.data
+    );
+
+    toast.error(
+      error.response?.data?.message ||
+        "❌ Something went wrong while saving course"
+    );
+  }
+};
 
   return (
     <>

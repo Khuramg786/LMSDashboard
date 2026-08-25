@@ -14,7 +14,6 @@ const Getupcomingcourses = () => {
   // const [price, setPrice] = useState("");
   // const [discount, setDiscount] = useState("");
   const [studentenroll, setStudentenroll] = useState("");
-  const [video, setVideo] = useState(null);
   const [whatYouWillLearn, setWhatYouWillLearn] = useState(["", "", "", "", "", ""]);
 
   // new fields
@@ -26,7 +25,7 @@ const Getupcomingcourses = () => {
   // ================= FETCH COURSES =================
   const fetchCourses = async () => {
     try {
-      const res = await fetch("http://localhost:5000/upcomings/getUpcoming");
+      const res = await fetch("https://pink-leopard-364778.hostingersite.com/upcomings/getUpcoming");
       const data = await res.json();
       setUpcomingcourses(data.upcoming || []);
     } catch (error) {
@@ -44,7 +43,7 @@ const Getupcomingcourses = () => {
     if (!window.confirm("Delete this upcoming course?")) return;
     try {
       const res = await fetch(
-        `http://localhost:5000/upcomings/deleteupcomingcourse/${id}`,
+        `https://pink-leopard-364778.hostingersite.com/upcomings/deleteupcomingcourse/${id}`,
         { method: "DELETE" }
       );
       const data = await res.json();
@@ -59,68 +58,126 @@ const Getupcomingcourses = () => {
   };
 
   // ================= OPEN MODAL =================
-  const openModal = (course) => {
-    setCurrentId(course._id);
-    setTitle(course.title);
-    setDiscruption(course.discruption);
-    setStudentenroll(course.studentenroll);
+ const openModal = (course) => {
+  console.log("UPDATE CLICKED:", course);
 
-    setWhatYouWillLearn(course.whatYouWillLearn || ["", "", "", "", "", ""]);
+  setCurrentId(course._id);
 
-    setVideo(null);
-    setRemoveImage(false);
+  setTitle(course.title || "");
+  setDiscruption(course.discruption || "");
+  setStudentenroll(course.studentenroll ?? "");
 
-    setRecordingDate(course.recordingDate ? course.recordingDate.split("T")[0] : "");
-    setDuration(course.duration || "");
-    setDay(course.day || "");
-    setTime(course.time || "");
+  setWhatYouWillLearn(
+    course.whatYouWillLearn?.length
+      ? course.whatYouWillLearn
+      : ["", "", "", "", "", ""]
+  );
 
-    setVideoUrl(course.videoUrl || "");   // ✅ FIXED
-    setShowModal(true);                   // must be last
-  };
+  setRemoveImage(false);
 
+  setRecordingDate(
+    course.recordingDate
+      ? course.recordingDate.split("T")[0]
+      : ""
+  );
+
+  setDuration(course.duration ?? "");
+  setDay(course.day || "");
+  setTime(course.time || "");
+
+  setVideoUrl(course.videoUrl || "");
+
+  setShowModal(true);
+};
   // ================= UPDATE =================
-  const updateCourse = async () => {
-    if (!title || !discruption || !studentenroll || !recordingDate || !duration || !day || !time) {
-      toast.error("❌ All fields are required");
-      return;
-    }
+const updateCourse = async () => {
+  if (
+    !title ||
+    !discruption ||
+    !studentenroll ||
+    !recordingDate ||
+    !duration ||
+    !day ||
+    !time
+  ) {
+    toast.error("❌ All fields are required");
+    return;
+  }
 
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("discruption", discruption);
-    // formData.append("price", Number(price));
-    // formData.append("discount", Number(discount));
-    formData.append("studentenroll", Number(studentenroll));
-    formData.append("removeImage", removeImage);
-    formData.append("recordingDate", recordingDate);
-    formData.append("duration", Number(duration));
-    formData.append("day", day);
-    formData.append("time", time);
-    formData.append("videoUrl", videoUrl);
+  const payload = {
+    title,
 
-    whatYouWillLearn.forEach((item) => {
-      if (item.trim()) formData.append("whatYouWillLearn[]", item);
-    });
+    discruption,
 
-    if (video) formData.append("videoUrl", video);
+    studentenroll: Number(studentenroll),
 
-    try {
-      const res = await fetch(
-        `http://localhost:5000/upcomings/updateupcomingcourese/${currentId}`,
-        { method: "PUT", body: formData }
-      );
-      const data = await res.json();
-      if (data.success) {
-        toast.success("✅ Course updated successfully");
-        fetchCourses();
-        setShowModal(false);
-      } else toast.error("❌ Update failed");
-    } catch (error) {
-      console.error(error);
-      toast.error("❌ Something went wrong");
-    }
+    videoUrl: videoUrl.trim(),
+
+    recordingDate,
+
+    duration: Number(duration),
+
+    day,
+
+    time,
+
+    whatYouWillLearn:
+      whatYouWillLearn.filter(
+        (item) => item.trim() !== ""
+      ),
   };
+
+  console.log(
+    "SENDING UPDATE DATA:",
+    payload
+  );
+
+  try {
+    const res = await fetch(
+      `https://pink-leopard-364778.hostingersite.com/upcomings/updateupcomingcourese/${currentId}`,
+      {
+        method: "PUT",
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify(payload),
+      }
+    );
+
+    const data = await res.json();
+
+    console.log(
+      "UPDATE RESPONSE:",
+      data
+    );
+
+    if (data.success) {
+      toast.success(
+        "✅ Course updated successfully"
+      );
+
+      fetchCourses();
+
+      setShowModal(false);
+    } else {
+      toast.error(
+        data.message ||
+          "❌ Update failed"
+      );
+    }
+  } catch (error) {
+    console.error(
+      "UPDATE ERROR:",
+      error
+    );
+
+    toast.error(
+      "❌ Something went wrong"
+    );
+  }
+};
 
   return (
     <>

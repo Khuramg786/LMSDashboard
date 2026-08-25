@@ -23,69 +23,84 @@ const [video, setVideo] = useState("");
 
   // ================= HANDLE SUBMIT =================
   const handleSubmit = async () => {
-    // Validation
-    if (
-      !title ||
-      !discruption ||
-      // !price ||
-      // !discount ||
-      !studentenroll ||
-     !video ||
-      !recordingDate ||
-      !duration ||
-      !day ||
-      !time
-    ) {
-      toast.error("❌ All required fields must be filled");
-      return;
-    }
+  // Validation
+  if (
+    !title ||
+    !discruption ||
+    !studentenroll ||
+    !video ||
+    !recordingDate ||
+    !duration ||
+    !day ||
+    !time
+  ) {
+    toast.error("❌ All required fields must be filled");
+    return;
+  }
 
-    // Prepare FormData
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("discruption", discruption);
-    // formData.append("price", price);
-    // formData.append("discount", discount);
-    formData.append("studentenroll", studentenroll);
-  formData.append("videoUrl", video);
-    formData.append("recordingDate", recordingDate);
-    formData.append("duration", duration);
-    formData.append("day", day);
-    formData.append("time", time);
+  const payload = {
+    title,
 
-    whatYouWillLearn.forEach((item) => {
-      if (item.trim()) {
-        formData.append("whatYouWillLearn[]", item);
-      }
-    });
+    discruption,
 
-    try {
-      const data = {
-  title,
-  discruption,
-  studentenroll,
-  videoUrl: video,
-  recordingDate,
-  duration,
-  day,
-  time,
-  whatYouWillLearn,
-};
+    studentenroll: Number(studentenroll),
 
-const res = await axios.post(
-  "http://localhost:5000/upcomings/createupcoming",
-  data
-);
+    videoUrl: video.trim(),
 
-      if (res.status === 201) {
-        toast.success("✅ Upcoming course added successfully!");
-        setTimeout(() => navigate("/courses/Getupcomingcourses"), 1500);
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("❌ Something went wrong");
-    }
+    recordingDate,
+
+    duration: Number(duration),
+
+    day,
+
+    time,
+
+    whatYouWillLearn: whatYouWillLearn.filter(
+      (item) => item.trim() !== ""
+    ),
   };
+
+  console.log("SENDING UPCOMING COURSE:", payload);
+
+  try {
+    const res = await axios.post(
+      "https://pink-leopard-364778.hostingersite.com/upcomings/createupcoming",
+      payload,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    console.log("UPCOMING RESPONSE:", res.data);
+
+    if (res.status === 201) {
+      toast.success(
+        "✅ Upcoming course added successfully!"
+      );
+
+      setTimeout(() => {
+        navigate("/courses/Getupcomingcourses");
+      }, 1500);
+    }
+  } catch (error) {
+    console.error(
+      "UPCOMING COURSE ERROR:",
+      error
+    );
+
+    console.error(
+      "SERVER RESPONSE:",
+      error.response?.data
+    );
+
+    toast.error(
+      error.response?.data?.message ||
+        "❌ Something went wrong"
+    );
+  }
+};
 
   return (
     <>
@@ -138,10 +153,14 @@ const res = await axios.post(
         />
 
         {/* ================= COURSE IMAGE ================= */}
- <input
+ <label className="form-label fw-bold">
+  Upcoming Course Video URL
+</label>
+
+<input
   type="text"
   className="form-control mb-3"
-  placeholder="Paste YouTube Video Link"
+  placeholder="Paste ImageKit / YouTube Video URL"
   value={video}
   onChange={(e) => setVideo(e.target.value)}
 />
