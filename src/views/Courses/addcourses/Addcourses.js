@@ -54,7 +54,7 @@ const handleSubmit = async () => {
 
   try {
     const res = await axios.post(
-      "https://pink-leopard-364778.hostingersite.com/course/upload",
+      "https://springgreen-marten-185632.hostingersite.com/course/upload",
       payload,
       {
         headers: {
