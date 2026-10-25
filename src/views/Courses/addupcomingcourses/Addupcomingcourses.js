@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const API_URL = "https://springgreen-marten-185632.hostingersite.com";
+const API_URL = "https://steelblue-ibex-930947.hostingersite.com";
 
 const Addupcomingcourses = () => {
   const navigate = useNavigate();

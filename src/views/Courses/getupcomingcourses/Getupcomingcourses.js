@@ -12,7 +12,7 @@ import {
 import "react-toastify/dist/ReactToastify.css";
 
 const API_URL =
-  "https://springgreen-marten-185632.hostingersite.com";
+  "https://steelblue-ibex-930947.hostingersite.com";
 
 const Getupcomingcourses = () => {
   // =====================================================
