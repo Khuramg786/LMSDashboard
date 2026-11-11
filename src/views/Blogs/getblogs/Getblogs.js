@@ -22,7 +22,7 @@ const Getblogs = () => {
   const fetchBlogs = async () => {
     try {
       const res = await fetch(
-        "https://steelblue-ibex-930947.hostingersite.com/blog/getblogs"
+        "https://lifechangersclubpakistanbackend.vercel.app/blog/getblogs"
       );
       const data = await res.json();
       setBlogs(data.blogs || []);
@@ -40,7 +40,7 @@ const Getblogs = () => {
 
     try {
       const res = await fetch(
-        `https://steelblue-ibex-930947.hostingersite.com/blog/deletebloges/${id}`,
+        `https://lifechangersclubpakistanbackend.vercel.app/blog/deletebloges/${id}`,
         { method: "DELETE" }
       );
       const data = await res.json();
@@ -80,7 +80,7 @@ const Getblogs = () => {
 
     try {
       const res = await fetch(
-        `https://steelblue-ibex-930947.hostingersite.com/blog/updateblog/${currentId}`,
+        `https://lifechangersclubpakistanbackend.vercel.app/blog/updateblog/${currentId}`,
         { method: "PUT", body: formData }
       );
 

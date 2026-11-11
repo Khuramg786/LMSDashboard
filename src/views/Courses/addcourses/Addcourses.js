@@ -54,7 +54,7 @@ const handleSubmit = async () => {
 
   try {
     const res = await axios.post(
-      "https://steelblue-ibex-930947.hostingersite.com/course/upload",
+      "https://lifechangersclubpakistanbackend.vercel.app/course/upload",
       payload,
       {
         headers: {

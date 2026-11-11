@@ -12,7 +12,7 @@ import {
 import "react-toastify/dist/ReactToastify.css";
 
 const API_URL =
-  "https://steelblue-ibex-930947.hostingersite.com";
+  "https://lifechangersclubpakistanbackend.vercel.app";
 
 const Getupcomingcourses = () => {
   // =====================================================
